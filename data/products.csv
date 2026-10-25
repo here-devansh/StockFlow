@@ -1,0 +1,11 @@
+id,name,category,price,quantity,threshold
+1,Parle-G Biscuit,Snacks,10.00,100,20
+2,Basmati Rice 1kg,Grocery,95.50,40,10
+3,Amul Milk 500ml,Dairy,28.00,60,15
+4,Maggi Noodles,Snacks,14.00,8,10
+5,Tata Salt 1kg,Grocery,28.00,50,10
+6,Classmate Notebook,Stationery,55.00,30,10
+7,Dettol Soap,Personal Care,42.00,25,8
+8,Good Day Biscuit,Snacks,20.00,5,10
+9,sf,ewer,23.00,4,34
+10,abhinav,snacks,2.00,1,1
