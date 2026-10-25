@@ -282,4 +282,5 @@ int main(int argc, char* argv[]) {
     }
     inventory.clear();
     return 0;
+    cout<<"HELLO ";
 }
