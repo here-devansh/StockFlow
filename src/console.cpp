@@ -35,3 +35,33 @@ inline int readInt(const std::string& prompt, int lo, int hi) {
         return v;
     }
 }
+inline double readPrice(const std::string& prompt) {
+    for (;;) {
+        double v;
+        if (!util::parseDouble(readLine(prompt), v)) { error("Please enter a valid number (e.g. 25.50)."); continue; }
+        if (!Product::isValidPrice(v)) { error("Price must be greater than 0 and at most " + util::money(Product::MAX_PRICE) + "."); continue; }
+        return v;
+    }
+}
+
+inline bool confirm(const std::string& prompt) {
+    std::string a = util::toLower(readLine(prompt + " (y/n): "));
+    return a == "y" || a == "yes";
+}
+
+inline void productTable(const std::vector<const Product*>& list) {
+    std::cout << std::left << std::setw(6) << "ID" << std::setw(27) << "Name" << std::setw(15) << "Category" << std::right
+              << std::setw(10) << "Price" << std::setw(8) << "Qty" << std::setw(6) << "Min" << "  " << std::left << "Status\n";
+    rule('-');
+    for (const Product* p : list) {
+        std::cout << std::left << std::setw(6) << p->id() << std::setw(27) << util::fit(p->name(), 26) << std::setw(15) << util::fit(p->category(), 14)
+                  << std::right << std::setw(10) << util::money(p->price()) << std::setw(8) << p->quantity() << std::setw(6) << p->threshold()
+                  << "  " << std::left << (p->quantity() == 0 ? "OUT OF STOCK" : p->isLowStock() ? "LOW STOCK" : "OK") << "\n";
+    }
+    rule('-');
+}
+
+}   
+
+
+
