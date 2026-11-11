@@ -14,17 +14,19 @@ namespace ui {
 
 struct InputClosed {};
 
- 
+// Display a horizontal line
 inline void rule(char c = '=') {
     cout << string(50, c) << endl;
 }
- 
+
+// Display a heading
 inline void heading(const string& title) {
     rule();
     cout << title << endl;
     rule();
 }
- 
+
+// Display messages
 inline void ok(const string& message) {
     cout << "[OK] " << message << endl;
 }
@@ -41,6 +43,7 @@ inline void error(const string& message) {
     cout << "[ERROR] " << message << endl;
 }
 
+// Take text input
 inline string readLine(const string& prompt) {
     string value;
 
@@ -52,6 +55,7 @@ inline string readLine(const string& prompt) {
     return util::trim(value);
 }
 
+// Take integer input
 inline int readInt(const string& prompt, int min, int max) {
     int value;
 
@@ -70,6 +74,7 @@ inline int readInt(const string& prompt, int min, int max) {
     }
 }
 
+// Take price input
 inline double readPrice(const string& prompt) {
     double price;
 
@@ -88,12 +93,14 @@ inline double readPrice(const string& prompt) {
     }
 }
 
+// Ask for confirmation
 inline bool confirm(const string& prompt) {
     string answer = util::toLower(readLine(prompt + " (y/n): "));
 
     return answer == "y" || answer == "yes";
 }
 
+// Display product information
 inline void productTable(const vector<const Product*>& list) {
 
     cout << "\nID\tName\tCategory\tPrice\tQuantity\tStatus\n";
