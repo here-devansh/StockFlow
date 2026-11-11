@@ -1,67 +1,126 @@
- #pragma once
-#include <climits>
-#include <iomanip>
+ 
+#pragma once
+
 #include <iostream>
 #include <string>
 #include <vector>
-#include "Product.cpp"
-#include "Utils.cpp"
+
+#include "Product.h"
+#include "Utils.h"
+
+using namespace std;
 
 namespace ui {
 
-struct InputClosed {};   
+struct InputClosed {};
 
-inline void rule(char c = '=') { std::cout << std::string(78, c) << "\n"; }
-inline void heading(const std::string& title) {
-    std::cout << "\n+" << std::string(76, '=') << "+\n| " << std::left << std::setw(75) << title << "|\n+" << std::string(76, '=') << "+\n";
+ 
+inline void rule(char c = '=') {
+    cout << string(50, c) << endl;
 }
-inline void ok(const std::string& m) { std::cout << "[OK]    " << m << "\n"; }
-inline void info(const std::string& m) { std::cout << "[INFO]  " << m << "\n"; }
-inline void warn(const std::string& m) { std::cout << "[WARN]  " << m << "\n"; }
-inline void error(const std::string& m) { std::cout << "[ERROR] " << m << "\n"; }
-
-inline std::string readLine(const std::string& prompt) {
-    std::cout << prompt << std::flush;
-    std::string s;
-    if (!std::getline(std::cin, s)) throw InputClosed();
-    return util::trim(s);   
+ 
+inline void heading(const string& title) {
+    rule();
+    cout << title << endl;
+    rule();
+}
+ 
+inline void ok(const string& message) {
+    cout << "[OK] " << message << endl;
 }
 
-inline int readInt(const std::string& prompt, int lo, int hi) {
-    for (;;) {
-        int v;
-        if (!util::parseInt(readLine(prompt), v)) { error("Please enter a whole number."); continue; }
-        if (v < lo || v > hi) { error("Value must be between " + std::to_string(lo) + " and " + std::to_string(hi) + "."); continue; }
-        return v;
+inline void info(const string& message) {
+    cout << "[INFO] " << message << endl;
+}
+
+inline void warn(const string& message) {
+    cout << "[WARNING] " << message << endl;
+}
+
+inline void error(const string& message) {
+    cout << "[ERROR] " << message << endl;
+}
+
+inline string readLine(const string& prompt) {
+    string value;
+
+    cout << prompt;
+
+    if (!getline(cin, value))
+        throw InputClosed();
+
+    return util::trim(value);
+}
+
+inline int readInt(const string& prompt, int min, int max) {
+    int value;
+
+    while (true) {
+        if (!util::parseInt(readLine(prompt), value)) {
+            error("Enter a valid whole number.");
+            continue;
+        }
+
+        if (value < min || value > max) {
+            error("Number is out of range.");
+            continue;
+        }
+
+        return value;
     }
 }
-inline double readPrice(const std::string& prompt) {
-    for (;;) {
-        double v;
-        if (!util::parseDouble(readLine(prompt), v)) { error("Please enter a valid number (e.g. 25.50)."); continue; }
-        if (!Product::isValidPrice(v)) { error("Price must be greater than 0 and at most " + util::money(Product::MAX_PRICE) + "."); continue; }
-        return v;
+
+inline double readPrice(const string& prompt) {
+    double price;
+
+    while (true) {
+        if (!util::parseDouble(readLine(prompt), price)) {
+            error("Enter a valid price.");
+            continue;
+        }
+
+        if (!Product::isValidPrice(price)) {
+            error("Invalid price.");
+            continue;
+        }
+
+        return price;
     }
 }
 
-inline bool confirm(const std::string& prompt) {
-    std::string a = util::toLower(readLine(prompt + " (y/n): "));
-    return a == "y" || a == "yes";
+inline bool confirm(const string& prompt) {
+    string answer = util::toLower(readLine(prompt + " (y/n): "));
+
+    return answer == "y" || answer == "yes";
 }
 
-inline void productTable(const std::vector<const Product*>& list) {
-    std::cout << std::left << std::setw(6) << "ID" << std::setw(27) << "Name" << std::setw(15) << "Category" << std::right
-              << std::setw(10) << "Price" << std::setw(8) << "Qty" << std::setw(6) << "Min" << "  " << std::left << "Status\n";
+inline void productTable(const vector<const Product*>& list) {
+
+    cout << "\nID\tName\tCategory\tPrice\tQuantity\tStatus\n";
+
     rule('-');
+
     for (const Product* p : list) {
-        std::cout << std::left << std::setw(6) << p->id() << std::setw(27) << util::fit(p->name(), 26) << std::setw(15) << util::fit(p->category(), 14)
-                  << std::right << std::setw(10) << util::money(p->price()) << std::setw(8) << p->quantity() << std::setw(6) << p->threshold()
-                  << "  " << std::left << (p->quantity() == 0 ? "OUT OF STOCK" : p->isLowStock() ? "LOW STOCK" : "OK") << "\n";
+
+        cout << p->id() << "\t"
+             << p->name() << "\t"
+             << p->category() << "\t"
+             << util::money(p->price()) << "\t"
+             << p->quantity() << "\t";
+
+        if (p->quantity() == 0)
+            cout << "OUT OF STOCK";
+
+        else if (p->isLowStock())
+            cout << "LOW STOCK";
+
+        else
+            cout << "OK";
+
+        cout << endl;
     }
+
     rule('-');
 }
 
-}   
-
-
-
+}
